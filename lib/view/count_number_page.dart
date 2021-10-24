@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:positive_conversion/data_class/csv_data.dart';
+import 'package:positive_conversion/view/result_page.dart';
 
 class CountNumberPage extends StatefulWidget {
   final String word;
@@ -39,6 +40,7 @@ class _CountNumberPageState extends State<CountNumberPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           title,
           style: TextStyle(
@@ -56,6 +58,8 @@ class _CountNumberPageState extends State<CountNumberPage> {
             : CircularProgressIndicator(),
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 20.0,
+        tooltip: "最もポジティブ値が高い類語を調べる",
         child: Icon(
           Icons.search,
           color: Colors.white,
@@ -102,8 +106,34 @@ class _CountNumberPageState extends State<CountNumberPage> {
     print("押された");
     //ファイルのロード＋文字一致判断
     loadAsset().then((value) {
-
+      getMaxValue(value);
     });
+  }
+
+  void getMaxValue(List<CsvData> value) {
+    //1.各類語と一致する極性辞書の用語を見つける。
+    //2.一致する極性辞書の用語に紐づく値をmaxValueと比較、更新
+    double maxValue = 0;
+    CsvData? maxValueWord;
+    _result.forEach((synonym) {
+      value.forEach((element) {
+        if ((synonym == element.kanji) || (synonym == element.hiragana)) {
+          print("類語と一致する極性辞書の単語: $element");
+          if (element.value > maxValue) {
+            print("類語(synonym)と一致した現在のmaxValueよりも大きい値を持つ極性辞書の単語$element");
+            maxValue = element.value;
+            maxValueWord = element;
+          }
+        }
+      });
+    });
+    print("maxValue: $maxValue");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultPage(maxValueWord: maxValueWord),
+      ),
+    );
   }
 }
 
@@ -114,13 +144,12 @@ Future<List<CsvData>> loadAsset() async {
   //csvデータを1行ずつ処理
   for (String line in csv.split("\n")) {
     //コロン区切りで各列のデータを配列に格納
-    print("Line:$line");
     List rows = line.split(",");
 
     CsvData rowData = CsvData(
       kanji: rows[0],
       hiragana: rows[1],
-      verb: rows[2],
+      pos: rows[2],
       value: double.parse(rows[3]),
     );
     valueList.add(rowData);

@@ -2,7 +2,7 @@
 class CsvData {
   final String kanji;
   final String hiragana;
-  final String verb;
+  final String pos;
   final double value;
 
 //<editor-fold desc="Data Methods">
@@ -10,7 +10,7 @@ class CsvData {
   const CsvData({
     required this.kanji,
     required this.hiragana,
-    required this.verb,
+    required this.pos,
     required this.value,
   });
 
@@ -21,19 +21,19 @@ class CsvData {
           runtimeType == other.runtimeType &&
           kanji == other.kanji &&
           hiragana == other.hiragana &&
-          verb == other.verb &&
+          pos == other.pos &&
           value == other.value);
 
   @override
   int get hashCode =>
-      kanji.hashCode ^ hiragana.hashCode ^ verb.hashCode ^ value.hashCode;
+      kanji.hashCode ^ hiragana.hashCode ^ pos.hashCode ^ value.hashCode;
 
   @override
   String toString() {
     return 'CsvData{' +
         ' kanji: $kanji,' +
         ' hiragana: $hiragana,' +
-        ' verb: $verb,' +
+        ' verb: $pos,' +
         ' value: $value,' +
         '}';
   }
@@ -47,7 +47,7 @@ class CsvData {
     return CsvData(
       kanji: kanji ?? this.kanji,
       hiragana: hiragana ?? this.hiragana,
-      verb: verb ?? this.verb,
+      pos: verb ?? this.pos,
       value: value ?? this.value,
     );
   }
@@ -56,7 +56,7 @@ class CsvData {
     return {
       'kanji': this.kanji,
       'hiragana': this.hiragana,
-      'verb': this.verb,
+      'verb': this.pos,
       'value': this.value,
     };
   }
@@ -65,7 +65,7 @@ class CsvData {
     return CsvData(
       kanji: map['kanji'] as String,
       hiragana: map['hiragana'] as String,
-      verb: map['verb'] as String,
+      pos: map['verb'] as String,
       value: map['value'] as double,
     );
   }
