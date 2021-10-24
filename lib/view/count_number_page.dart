@@ -102,7 +102,7 @@ class _CountNumberPageState extends State<CountNumberPage> {
     print("押された");
     //ファイルのロード＋文字一致判断
     loadAsset().then((value) {
-      print(value.length);
+
     });
   }
 }
@@ -114,7 +114,9 @@ Future<List<CsvData>> loadAsset() async {
   //csvデータを1行ずつ処理
   for (String line in csv.split("\n")) {
     //コロン区切りで各列のデータを配列に格納
-    List rows = line.split(":");
+    print("Line:$line");
+    List rows = line.split(",");
+
     CsvData rowData = CsvData(
       kanji: rows[0],
       hiragana: rows[1],
